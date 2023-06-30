@@ -1,6 +1,7 @@
 package com.infybuzz.controller;
 
 
+import com.infybuzz.service.JobService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
@@ -23,20 +24,12 @@ import java.util.Map;
 public class JobController {
 
     @Autowired
-    JobLauncher jobLauncher;
-
-    @Autowired
-    Job job;
+    JobService jobService;
 
     @GetMapping("/start/{jobName}")
     public String startJob(@PathVariable String jobName) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-        Map<String, JobParameter> params=new HashMap<>();
-        params.put("currentTime: ",new JobParameter(System.currentTimeMillis()));
-        if(jobName.equals("FirstJob")){
-            jobLauncher.run(job,new JobParameters());
-            return "Job Started";
-        }
-        return "Job doesn't exists";
+        jobService.startJob(jobName);
+        return "Job Started";
     }
 
 
